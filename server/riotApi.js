@@ -2,7 +2,7 @@
   'use strict';
 
   const getUrl = require('./fetchUtils').getUrl;
-  const key = 'RGAPI-df6d1c81-9a0e-42a0-8562-66465c298648';
+  const key = require('./env/apiKey');
   const https = require('https');
   const staticData = require('./staticData');
 

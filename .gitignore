@@ -3,3 +3,4 @@ yarn.lock
 build/
 champ.json
 item.json
+server/env/apikey.js
