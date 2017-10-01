@@ -1,11 +1,12 @@
 import Game from './Game.jsx';
+import getParamByName from './utils/getParamByName.jsx';
 
 export default class Coleless extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      accounts: '',
+      accounts: getParamByName('accounts'),
       currentGame: undefined
     };
   }
