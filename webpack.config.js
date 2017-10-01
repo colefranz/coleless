@@ -31,7 +31,7 @@ module.exports = {
          loader: 'babel-loader',
          query: {
            presets: ['react', 'es2015'],
-           plugins: []
+           plugins: ["transform-class-properties"]
          },
          include: [
            path.resolve(__dirname, 'client')

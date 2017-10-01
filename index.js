@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const app = module.exports.app = exports.app = express();
 const port = process.argv[2] || 3000;
+const riotApi = require('./server/riotApi');
 
 // if asked for a file, look for it in app
 app.use(express.static(path.join(__dirname, 'build')));
@@ -16,22 +17,32 @@ app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.post('/summoners', function(req, res) {
-  console.log(req.body);
-  if (req.body.name === undefined) {
+app.post('/currentgame', function(req, res) {
+  const name = req.body.name;
+
+  if (name === undefined) {
     res.status(400).send({msg: 'Summoner name was empty.'});
 
     return;
   }
-   res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Content-Type', 'application/json');
 
-  riotApi.getSummonerId(req.body.name)
+  console.log('getting current game for:', name);
+  riotApi.getSummonerId(name)
     .then(function(summoner) {
-      return riotApi.getCurrentGame(summoner.id);
+      const id = summoner.id;
+
+      console.log('got id of ', id, ' for', name);
+      console.log('now fetching current game for:', id);
+
+      return riotApi.getCurrentGame(id);
     })
     .then(function(currentGame) {
+      console.log('found current game for', name);
+
       res.json(currentGame);
     }, function(status) {
+      console.log('failed finding current game for', name, 'with status', status);
       res.status(status || 500).send();
     });
 });
