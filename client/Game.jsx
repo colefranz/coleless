@@ -18,7 +18,7 @@ export default class Game extends React.Component {
     });
 
     return (
-      <div className="red-team">
+      <div className="red team">
         {this.renderParticipants(redTeam)}
       </div>
     )
@@ -37,7 +37,7 @@ export default class Game extends React.Component {
     });
 
     return (
-      <div className="blue-team">
+      <div className="blue team">
         {this.renderParticipants(blueTeam)}
       </div>
     )
@@ -58,8 +58,11 @@ export default class Game extends React.Component {
 
     return (
       <div className="game">
-        {this.renderRedTeam()}
-        {this.renderBlueTeam()}
+        <h2>Following: {this.props.player}</h2>
+        <div className="teams">
+          {this.renderRedTeam()}
+          {this.renderBlueTeam()}
+        </div>
       </div>
     );
   }

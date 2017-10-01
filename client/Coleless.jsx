@@ -19,30 +19,31 @@ export default class Coleless extends React.Component {
 
     const self = this;
 
-    //TODO forEach(accounts);
     const accounts = this.state.accounts.split(',');
 
-    fetch('/currentgame', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: accounts[0].trim()
-      })
-    }).then(function(res) {
-      if (!res.ok) {
-        self.setState({error: res.statusText});
+    // TODO might be better to make this do one at a time
+    _.forEach(accounts, function(account) {
+      fetch('/currentgame', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: accounts[0].trim()
+        })
+      }).then(function(res) {
+        if (!res.ok) {
+          return;
+        }
 
-        return;
-      }
-
-      res.json().then((body) => {
-        self.setState({currentGame: body});
+        res.json().then((body) => {
+          self.setState({
+            currentGame: body,
+            inGameAccount: account
+          });
+        });
       });
-    }, function(res) {
-      self.setState({error: res.statusText});
-    })
+    });
   }
 
   accountsChange = (event) => {
@@ -60,7 +61,7 @@ export default class Coleless extends React.Component {
             value={this.state.accounts}
             onChange={this.accountsChange} />
         </form>
-        <Game data={this.state.currentGame} />
+        <Game player={this.state.inGameAccount} data={this.state.currentGame} />
       </div>
     );
   }

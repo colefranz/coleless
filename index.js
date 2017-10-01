@@ -9,12 +9,17 @@ const riotApi = require('./server/riotApi');
 const gameCache = {};
 
 // if asked for a file, look for it in app
-app.use(express.static(path.join(__dirname, 'build')));
+console.log(path.join(__dirname, 'server', 'staticData'));
+app.use(express.static(path.join(__dirname, 'server', 'staticData')));
 app.use(bodyParser.json());
 
 // if that file isn't found serve up the html as we want
 // the app the handle every other route
-app.get('*', function(req, res) {
+app.get('/main.bundle.js', function(req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'main.bundle.js'));
+});
+
+app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 

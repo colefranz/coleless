@@ -1,6 +1,20 @@
+
+@red: rgba(230, 57, 70, 1);
+@red-accent: rgba(180, 7, 10, 1);
+@blue: rgba(69, 123, 157, 1);
+@blue-accent: rgba(29, 53, 87, 1);
+@white: rgba(241, 250, 238, 1);
+@neutral: rgba(168, 218, 220, 1);
+@green: rgb(37, 112, 82);
+
 body {
   padding: 0;
   margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
 }
 
 #main {
@@ -9,9 +23,73 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
-  background: #cccccc;
+  background: @white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   .game {
-    display: flex;
+    text-align: center;
+    width: 100%;
+
+    .teams {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .team {
+        display: flex;
+        width: 80%;
+        max-width: 1024px;
+        padding: 10px;
+
+        .summoner {
+          flex: 1;
+          text-align: center;
+
+          .summoner-name {
+            font-weight: bold;
+          }
+
+          .icon {
+            width: 40px;
+            height: 40px;
+          }
+
+          .win-rate {
+            width: 100%;
+            padding: 0px 5px;
+
+            p {
+              margin: 2px;
+            }
+
+            span {
+              display: inline-block;
+              height: 15px;
+
+              &.wins {
+                background: @green;
+              }
+
+              &.losses {
+                background: @white;
+                border: 1px solid @green;
+              }
+            }
+          }
+        }
+      }
+
+      .blue {
+        border: 10px solid @blue-accent;
+        border-top: none;
+      }
+
+      .red {
+        border: 10px solid @red-accent;
+        border-bottom: none;
+      }
+    }
   }
 }
