@@ -7,6 +7,8 @@ export default class Game extends React.Component {
 
   renderRedTeam = () => {
     // todo is this needed?
+    const participants = this.props.data.participants;
+
     if (!_.isArrayLike(participants) || participants.length < 1) {
       return null;
     }
@@ -16,31 +18,33 @@ export default class Game extends React.Component {
     });
 
     return (
-      <div id="red-team">
+      <div className="red-team">
         {this.renderParticipants(redTeam)}
       </div>
     )
   }
 
   renderBlueTeam = () => {
+    const participants = this.props.data.participants;
+
     // todo is this needed?
     if (!_.isArrayLike(participants) || participants.length < 1) {
       return null;
     }
 
-    const blueTeam = _.filter(this.props.data.participants, function(participant) {
+    const blueTeam = _.filter(participants, function(participant) {
       return participant.teamId === 200;
     });
 
     return (
-      <div id="blue-team">
+      <div className="blue-team">
         {this.renderParticipants(blueTeam)}
       </div>
     )
   }
 
   renderParticipants(participants) {
-    return _.map(this.props.data.participants, function(participant, index) {
+    return _.map(participants, function(participant, index) {
       return (
         <Summoner key={index} data={participant} />
       );
@@ -53,7 +57,7 @@ export default class Game extends React.Component {
     }
 
     return (
-      <div>
+      <div className="game">
         {this.renderRedTeam()}
         {this.renderBlueTeam()}
       </div>

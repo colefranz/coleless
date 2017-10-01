@@ -6,6 +6,7 @@ const path = require('path');
 const app = module.exports.app = exports.app = express();
 const port = process.argv[2] || 3000;
 const riotApi = require('./server/riotApi');
+const gameCache = {};
 
 // if asked for a file, look for it in app
 app.use(express.static(path.join(__dirname, 'build')));
@@ -25,7 +26,14 @@ app.post('/currentgame', function(req, res) {
 
     return;
   }
+
   res.setHeader('Content-Type', 'application/json');
+
+  if (gameCache[name] !== undefined) {
+    res.json(gameCache[name]);
+
+    return;
+  }
 
   console.log('getting current game for:', name);
   riotApi.getSummonerId(name)
@@ -39,6 +47,8 @@ app.post('/currentgame', function(req, res) {
   })
   .then(function(currentGame) {
     console.log('found current game for', name);
+
+    gameCache[name] = currentGame;
 
     res.json(currentGame);
   }, function(status) {
