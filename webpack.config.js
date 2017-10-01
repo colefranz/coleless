@@ -15,7 +15,8 @@ module.exports = {
         template: 'client/index.ejs'
       }),
       new webpack.ProvidePlugin({
-          _: 'lodash'
+        _: 'lodash',
+        React: 'react',
       })
    ],
    module: {
@@ -44,7 +45,6 @@ module.exports = {
    },
    resolve: {
      alias: {
-       'react': 'react/index.js',
        'react-dom': 'react-dom/index.js'
      }
    }

@@ -1,4 +1,3 @@
-import React from 'react';
 import Game from './Game.jsx';
 
 export default class Coleless extends React.Component {
@@ -61,7 +60,7 @@ export default class Coleless extends React.Component {
             value={this.state.accounts}
             onChange={this.accountsChange} />
         </form>
-        <Game info={this.state.currentGame} />
+        <Game data={this.state.currentGame} />
       </div>
     );
   }
