@@ -18,6 +18,10 @@
   staticData.getItemData(key).then(function(data) {
     itemData = data;
   });
+  
+  staticData.getVersionsData(key).then(function(data) {
+    version = data[0];
+  });
 
   exports.getCurrentGame = function(id, region) {
     return getUrl('https://na1.api.riotgames.com/lol/spectator/v3/active-games/by-summoner/' + id + '?api_key=' + key)

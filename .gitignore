@@ -1,6 +1,5 @@
 node_modules/
 yarn.lock
 build/
-champ.json
-item.json
+server/staticData/
 server/env/apikey.js

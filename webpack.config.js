@@ -9,11 +9,14 @@ module.exports = {
      filename: 'main.bundle.js'
    },
    plugins: [
-     new HtmlWebpackPlugin({
-       title: 'Coalesce',
-       filename: 'index.html',
-       template: 'client/index.ejs'
-     })
+      new HtmlWebpackPlugin({
+        title: 'Coalesce',
+        filename: 'index.html',
+        template: 'client/index.ejs'
+      }),
+      new webpack.ProvidePlugin({
+          _: 'lodash'
+      })
    ],
    module: {
      rules: [

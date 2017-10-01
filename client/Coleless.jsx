@@ -29,7 +29,7 @@ export default class Coleless extends React.Component {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        name: accounts[0].trim(),
+        name: accounts[0].trim()
       })
     }).then(function(res) {
       if (!res.ok) {
@@ -39,7 +39,7 @@ export default class Coleless extends React.Component {
       }
 
       res.json().then((body) => {
-        self.setState({currentGame: JSON.stringify(body)});
+        self.setState({currentGame: body});
       });
     }, function(res) {
       self.setState({error: res.statusText});
