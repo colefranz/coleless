@@ -26,7 +26,7 @@ function getData(file, url, converter) {
         console.log ("Fetching data from", url);
         getUrl(url + key).then(function(res) {
           let data = res.data;
-          
+
           fs.writeFile(filePath, converter(data));
 
           deferred.resolve(data);

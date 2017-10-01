@@ -13,9 +13,9 @@ export default class Game extends React.Component {
       return null;
     }
 
-    return _.map(this.props.info.participants, function(participant) {
+    return _.map(this.props.info.participants, function(participant, index) {
       return (
-        <img src={participant.champ.icon} />
+        <img key={index} src={participant.champ.icon} />
       );
     });
   }
