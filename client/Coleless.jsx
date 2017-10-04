@@ -59,7 +59,7 @@ export default class Coleless extends React.Component {
           <input type="text"
             ref={(ref) => this.accountsInput = ref}
             id="accounts-input"
-            value={this.state.accounts}
+            value={this.state.accounts || ''}
             onChange={this.accountsChange} />
         </form>
         <Game player={this.state.inGameAccount} data={this.state.currentGame} />
