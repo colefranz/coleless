@@ -30,6 +30,7 @@
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
+    "getPlayer": "node helpers/getActiveSummoner.js",
     "watch": "concurrently --kill-others \"webpack --config webpack.config.js --watch\" \"node index.js\"",
     "client:watch": "webpack --config webpack.config.js --watch",
     "server": "node index.js"
