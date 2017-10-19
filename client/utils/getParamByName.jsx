@@ -1,5 +1,4 @@
 export default function getParameterByName(name) {
-  console.log('getParamByName has been called with name = ' + name);
   var url = window.location.href;
 
   // Replace all instances of a bunch of brackets with the last match
