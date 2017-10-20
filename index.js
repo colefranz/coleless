@@ -6,6 +6,7 @@ const path = require('path');
 const app = module.exports.app = exports.app = express();
 const port = process.argv[2] || 3000;
 const riotApi = require('./server/riotApi');
+const accountCache = {};
 const gameCache = {};
 
 // if asked for a file, look for it in app
@@ -23,10 +24,13 @@ app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.post('/currentgame', function(req, res) {
-  const name = req.body.name;
+// Sara: this will hopefully just return whether the account exists or not
+// Eventually will show up with name + icon, and then you can add it
+app.post('/searchedAccount', function(req, res) {
+  console.log('In here somewhere?????????');
+  const dummyName = req.body.name;
 
-  if (name === undefined) {
+  if (dummyName === undefined) {
     res.status(400).send({msg: 'Summoner name was empty.'});
 
     return;
@@ -34,33 +38,62 @@ app.post('/currentgame', function(req, res) {
 
   res.setHeader('Content-Type', 'application/json');
 
-  if (gameCache[name] !== undefined) {
-    res.json(gameCache[name]);
+  if (accountCache[name] !== undefined) {
+    res.json(accountCache[name]);
 
     return;
   }
 
-  console.log('getting current game for:', name);
-  riotApi.getSummonerId(name)
+  console.log('getting verification for:', name);
+  riotApi.getSummonerId(dummyName)
   .then(function(summoner) {
-    const id = summoner.id;
+    const dummyId = summoner.id;
 
-    console.log('got id of ', id, ' for', name);
-    console.log('now fetching current game for:', id);
-
-    return riotApi.getCurrentGame(id);
-  })
-  .then(function(currentGame) {
-    console.log('found current game for', name);
-
-    gameCache[name] = currentGame;
-
-    res.json(currentGame);
+    console.log('got id of ', dummyId, ' for', dummyName);
   }, function(status) {
-    console.log('failed finding current game for', name, 'with status', status);
+    console.log('Failed finding account: ', dummyName, 'with status', status);
     res.status(status || 500).send();
   });
 });
+
+// app.post('/currentgame', function(req, res) {
+//   const name = req.body.name;
+
+//   if (name === undefined) {
+//     res.status(400).send({msg: 'Summoner name was empty.'});
+
+//     return;
+//   }
+
+//   res.setHeader('Content-Type', 'application/json');
+
+//   if (gameCache[name] !== undefined) {
+//     res.json(gameCache[name]);
+
+//     return;
+//   }
+
+//   console.log('getting current game for:', name);
+//   riotApi.getSummonerId(name)
+//   .then(function(summoner) {
+//     const id = summoner.id;
+
+//     console.log('got id of ', id, ' for', name);
+//     console.log('now fetching current game for:', id);
+
+//     return riotApi.getCurrentGame(id);
+//   })
+//   .then(function(currentGame) {
+//     console.log('found current game for', name);
+
+//     gameCache[name] = currentGame;
+
+//     res.json(currentGame);
+//   }, function(status) {
+//     console.log('failed finding current game for', name, 'with status', status);
+//     res.status(status || 500).send();
+//   });
+// });
 
 app.listen(port, function() {
   console.log('Listening on ' + port);
