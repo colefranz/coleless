@@ -27,10 +27,11 @@ app.get('/', function(req, res) {
 // Sara: this will hopefully just return whether the account exists or not
 // Eventually will show up with name + icon, and then you can add it
 app.post('/searchedAccount', function(req, res) {
-  console.log('In here somewhere?????????');
-  const dummyName = req.body.name;
+  const summonerName = req.body.summonerName;
+  console.log(summonerName);
 
-  if (dummyName === undefined) {
+  if (summonerName === undefined) {
+    console.log('Summoner name was undefined');
     res.status(400).send({msg: 'Summoner name was empty.'});
 
     return;
@@ -38,20 +39,20 @@ app.post('/searchedAccount', function(req, res) {
 
   res.setHeader('Content-Type', 'application/json');
 
-  if (accountCache[name] !== undefined) {
-    res.json(accountCache[name]);
+  if (accountCache[summonerName] !== undefined) {
+    res.json(accountCache[summonerName]);
 
     return;
   }
 
-  console.log('getting verification for:', name);
-  riotApi.getSummonerId(dummyName)
+  console.log('getting verification for:', summonerName);
+  riotApi.getSummonerId(summonerName)
   .then(function(summoner) {
     const dummyId = summoner.id;
 
-    console.log('got id of ', dummyId, ' for', dummyName);
+    console.log('got id of ', dummyId, ' for', summonerName);
   }, function(status) {
-    console.log('Failed finding account: ', dummyName, 'with status', status);
+    console.log('Failed finding account: ', summonerName, 'with status', status);
     res.status(status || 500).send();
   });
 });

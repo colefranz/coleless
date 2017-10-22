@@ -33,7 +33,7 @@ export default class Coleless extends React.Component {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          dummyName: accounts[0].trim()
+          summonerName: accounts[0].trim()
         })
       }).then(function(res) {
         if (!res.ok) {
