@@ -7,7 +7,11 @@ export default class Coleless extends React.Component {
 
     this.state = {
       accounts: getParamByName('accounts'),
-      currentGame: undefined
+      currentGame: undefined,
+      summonerFound: false,
+      error: {
+        message: ''
+      }
     };
   }
 
@@ -15,7 +19,10 @@ export default class Coleless extends React.Component {
     this.accountsInput.focus();
   }
 
-  // Sara's function to just get if the account exists or not
+  // Sara: Okay, how do I want to do this now?
+  // So on the main page I can have a search bar
+
+  // Function just sees if account exists or not
   retrieveAccounts = (event) => {
     // Sara: you want to come in here to be able to play with a page I think
     // so that you can kind of get somewhere without it erroring out
@@ -23,8 +30,11 @@ export default class Coleless extends React.Component {
     event.preventDefault();
 
     const self = this;
-    // I guess for now we will enter them separated by a comma (might be easiest)
     const accounts = this.state.accounts.split(',');
+
+    // Okay. If the account does not exist, output a message to user saying
+    // that the account does not exist
+    // 'Sorry, the summoner name you entered does not exist. Please enter a valid summoner name.'
 
     _.forEach(accounts, function(account) {
       fetch('/searchedAccount', {
@@ -36,16 +46,57 @@ export default class Coleless extends React.Component {
           summonerName: accounts[0].trim()
         })
       }).then(function(res) {
+        // A 400 error corresponds to the summoner not existing
+        // We could probably break this up further into its 
+        // own function that has a switch that actuall
+        // displays the error on the screen
         if (!res.ok) {
-          console.log('res is not ok');
+          let errorMessage;
+
+          switch (res.status) {
+            case 404: 
+              errorMessage = 'The summoner you entered does not exist. Please enter a valid summoner name';
+              break;
+            
+            case 400:
+              errorMessage = 'API key may be out of date. Please update';
+              break;
+            
+            default:
+              errorMessage = 'An error has occurred';
+              break;
+          }
+
+          self.setState(function(state) {
+            state.error.message = errorMessage;
+            
+            return state;
+          });
+
           return;
         }
 
         res.json().then((body) => {
-         console.log('winning');
+          self.setState(function(state) {
+            state.summonerFound = true;
+
+            return state;
+          });
         });
       });
     });
+  }
+
+  renderErrorMessage = function() {
+    const self = this;
+
+    if (self.state.error.message !== '') {
+      return (
+        <div>
+          <p>{self.state.error.message}</p>
+        </div>
+      );
+    }
   }
   
   // findAccounts = (event) => {
@@ -103,6 +154,9 @@ export default class Coleless extends React.Component {
             value={this.state.accounts || ''}
             onChange={this.accountsChange} />
         </form>
+        <div>
+          {this.renderErrorMessage()}
+        </div>
         <Game player={this.state.inGameAccount} data={this.state.currentGame} />
       </div>
     );

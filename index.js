@@ -28,11 +28,10 @@ app.get('/', function(req, res) {
 // Eventually will show up with name + icon, and then you can add it
 app.post('/searchedAccount', function(req, res) {
   const summonerName = req.body.summonerName;
-  console.log(summonerName);
 
   if (summonerName === undefined) {
     console.log('Summoner name was undefined');
-    res.status(400).send({msg: 'Summoner name was empty.'});
+    res.status(400).send({msg: 'Summoner name was undefined'});
 
     return;
   }
@@ -46,11 +45,14 @@ app.post('/searchedAccount', function(req, res) {
   }
 
   console.log('getting verification for:', summonerName);
+
   riotApi.getSummonerId(summonerName)
   .then(function(summoner) {
-    const dummyId = summoner.id;
+    const summonerId = summoner.id;
 
-    console.log('got id of ', dummyId, ' for', summonerName);
+    console.log('got id of ', summonerId, ' for', summonerName);
+
+    res.json({summonerName: summonerName, summonerId: summonerId});
   }, function(status) {
     console.log('Failed finding account: ', summonerName, 'with status', status);
     res.status(status || 500).send();
