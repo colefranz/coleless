@@ -1,4 +1,5 @@
 import Game from './Game.jsx';
+import AddSummoner from './AddSummoner.jsx';
 import getParamByName from './utils/getParamByName.jsx';
 
 export default class Coleless extends React.Component {
@@ -11,30 +12,32 @@ export default class Coleless extends React.Component {
       summonerFound: false,
       error: {
         message: ''
-      }
+      },
+      // will keep track of all the summoner informaiton
+      // SARA: You can look at statusboard for this I think
+      summonerQueue: {},
+      searchForSummoner: false
     };
   }
 
-  componentDidMount() {
-    this.accountsInput.focus();
-  }
+  // comment out for now because I legit don't know how to access it
+  // componentDidMount() {
+  //   this.accountsInput.focus();
+  // }
 
   // Sara: Okay, how do I want to do this now?
-  // So on the main page I can have a search bar
+  // So on the main page I can have a search bar, which already exists
+  // Search for the summoner
+  // If it exists, pull up information for it
+  // Add to a queue of some sort
 
   // Function just sees if account exists or not
   retrieveAccounts = (event) => {
-    // Sara: you want to come in here to be able to play with a page I think
-    // so that you can kind of get somewhere without it erroring out
-    // Okay, first question: how do we see if an account exists at all?
     event.preventDefault();
 
     const self = this;
+    // this will go away soon becuase we will add one account at a time
     const accounts = this.state.accounts.split(',');
-
-    // Okay. If the account does not exist, output a message to user saying
-    // that the account does not exist
-    // 'Sorry, the summoner name you entered does not exist. Please enter a valid summoner name.'
 
     _.forEach(accounts, function(account) {
       fetch('/searchedAccount', {
@@ -46,10 +49,6 @@ export default class Coleless extends React.Component {
           summonerName: accounts[0].trim()
         })
       }).then(function(res) {
-        // A 400 error corresponds to the summoner not existing
-        // We could probably break this up further into its 
-        // own function that has a switch that actuall
-        // displays the error on the screen
         if (!res.ok) {
           let errorMessage;
 
@@ -79,6 +78,8 @@ export default class Coleless extends React.Component {
         res.json().then((body) => {
           self.setState(function(state) {
             state.summonerFound = true;
+            state.summonerName = body.summonerName;
+            state.summonerId = body.summonerId;
 
             return state;
           });
@@ -89,15 +90,18 @@ export default class Coleless extends React.Component {
 
   renderErrorMessage = function() {
     const self = this;
+    let message = self.state.error.message;
 
-    if (self.state.error.message !== '') {
+    if (message !== '') {
       return (
-        <div>
+        <div class="error-message">
           <p>{self.state.error.message}</p>
         </div>
       );
     }
   }
+
+  // Sara: we want to move this
   
   // findAccounts = (event) => {
   //   // Sara: you want to come in here to be able to play with a page I think
@@ -139,24 +143,55 @@ export default class Coleless extends React.Component {
   //   });
   // }
 
+  showForm = (event) => {
+    const self = this;
+
+    self.setState(function(state) {
+      state.searchForSummoner = !this.state.searchForSummoner;
+
+      return state;
+    });
+  }
+
+  renderSummonerForm = (event) => {
+    const self = this;
+
+    if (self.state.searchForSummoner === true) {
+      return (
+        <div id="summoner-form">
+          <form onSubmit={self.retrieveAccounts}>
+            <label htmlFor="accounts-input">Enter your accounts </label>
+            <input type="text"
+              ref={(ref) => self.accountsInput = ref}
+              id="accounts-input"
+              value={self.state.accounts || ''}
+              onChange={self.accountsChange} />
+          </form>
+        </div>
+      );
+    }
+  }
+
   accountsChange = (event) => {
     this.setState({accounts: event.target.value})
   }
 
+  // Note for Sara: Eventually we are going to want to move Game so that it will be 
+  // accessed only after we've added the player to the queue
+  // Sara: only show the form after the + button is clicked
   render() {
     return (
       <div id="main">
-        <form onSubmit={this.retrieveAccounts}>
-          <label htmlFor="accounts-input">Enter your accounts </label>
-          <input type="text"
-            ref={(ref) => this.accountsInput = ref}
-            id="accounts-input"
-            value={this.state.accounts || ''}
-            onChange={this.accountsChange} />
-        </form>
-        <div>
-          {this.renderErrorMessage()}
+        <div id="get-summoner-stuff">
+          {this.renderSummonerForm()}
+          <div id="add-summoner" onClick={this.showForm}>
+            +
+          </div>
         </div>
+        {this.renderErrorMessage()}
+        <AddSummoner summonerName={this.state.summonerName}
+          summonerId={this.state.summonerId}
+          summonerFound={this.state.summonerFound} />
         <Game player={this.state.inGameAccount} data={this.state.currentGame} />
       </div>
     );

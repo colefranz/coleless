@@ -24,9 +24,52 @@ body {
   bottom: 0;
   left: 0;
   background: @white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  // display: flex;
+  // flex-direction: column;
+  // align-items: center;
+
+  #get-summoner-stuff {
+    margin: 5px auto;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+
+    #add-summoner {
+      font-size: 25px;
+      color: grey;
+      text-align: right;
+      padding: 5px;
+      margin: 0px 5px;
+  
+      &:hover {
+        color: blue;
+        cursor: pointer;
+      }
+    }
+
+    #summoner-form {
+      padding: 5px;
+      margin: 5px;
+    }
+  }
+
+  .error-message {
+    text-align: center;
+    color: red;
+  }
+
+  .summoner-result {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 500px;
+    display: flex;
+    border: 1px solid black;
+    padding: 5px;
+    justify-content: center;
+  }
 
   .game {
     text-align: center;
